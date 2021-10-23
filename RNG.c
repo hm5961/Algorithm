@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#define MAX_COUNT	32000
+#define MAX_COUNT	32000 //최대값 *32767 초과 금지
 int main()
 {
-	FILE* p_file = fopen("33.txt", "wt");
+	FILE* p_file = fopen("33.txt", "wt"); // 작성 파일 명 사용 시 수정 필
 	int data[MAX_COUNT], i, sub_i;
 	srand((unsigned int)time(NULL));
 
