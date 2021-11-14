@@ -6,17 +6,17 @@ typedef struct node {
 	struct node* left;
 	struct node* right;
 } Node;
-// Æ®¸®·Î »ç¿ë ÇÒ ³ëµå
+// íŠ¸ë¦¬ë¡œ ì‚¬ìš© í•  ë…¸ë“œ
 
 void input_eng(char alp);
-// ¾ËÆÄºªÀ» ¹Þ¾Æ¼­ ¼ýÀÚ´ç ºóµµ Ä«¿îÆ®
+// ì•ŒíŒŒë²³ì„ ë°›ì•„ì„œ ìˆ«ìžë‹¹ ë¹ˆë„ ì¹´ìš´íŠ¸
 
-void read_num(); // Æ®¸® ÁÂ¿ì Å¸°í ´Ù´Ï¸ç ¼ö¿¡ ÇØ´çÇÏ´Â ÀÌÁøÄÚµå ³ª¿À°ÔÇÏ´Â ÇÔ¼ö
+int encoding();
+void read_num(); // íŠ¸ë¦¬ ì¢Œìš° íƒ€ê³  ë‹¤ë‹ˆë©° ìˆ˜ì— í•´ë‹¹í•˜ëŠ” ì´ì§„ì½”ë“œ ë‚˜ì˜¤ê²Œí•˜ëŠ” í•¨ìˆ˜
 
-int decoding();
-char incoding();
+char decoding();
 
-// ÁßÀ§Å½»öÀ¸·Î ÁøÇàÇÒ °Í
+// ì¤‘ìœ„íƒìƒ‰ìœ¼ë¡œ ì§„í–‰í•  ê²ƒ
 
 // if(p->left \or\ right == (int)p->left \or\ right))
 // {
@@ -37,12 +37,12 @@ void input_eng(char alp)
 
 }
 
-int decoding()
+char decoding()
 {
 
 }
 
-char incoding()
+int encoding()
 {
 
 }
