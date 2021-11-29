@@ -210,7 +210,7 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
         n[i]->freq = cnt[i];
         n[i]->left = NULL;
         n[i]->right = NULL;
-        n[i]->bin = malloc(sizeof(char) * 5);
+        n[i]->bin = NULL;
         printf("n[%d]->freq = %d\n", i, n[i]->freq);
 
     }
@@ -378,20 +378,15 @@ void encoding(Node* n, char* binen, int length, int *alp)
         {
             for (int i = 0; i < 26;i++)
             {
-                if (n->alpha == alp[i]+64)
-                {
+                    n->bin = malloc(sizeof(char) * length);
                     binen[length] = '\0';
                     strcpy(n->bin, binen);
-                    printf("%s\n", n->bin);
-                }
-
             }
         }
             
         if (n->right)
         {
             binen[length] = '1';
-            length++;
             encoding(n->right, binen,length+1,alp);
         }
         
@@ -402,7 +397,7 @@ void recursiveInorderbin(Node* ptr)
     if (ptr) { // ptr의 자식노드로 재귀된 값이 노드의 형태 일 때 
         recursiveInorderbin(ptr->left); // 왼쪽 자식노드 재귀로 탐색  
         if(!ptr->left && !ptr->right)
-            printf("[%c = %s] \n", ptr->alpha, ptr->bin); // 탐색된 값 출력 
+            printf("[%c = %s]", ptr->alpha, ptr->bin); // 탐색된 값 출력 
         recursiveInorderbin(ptr->right); // 오른쪽 자식 노드 재귀로 탐색 
     }
 }
