@@ -205,6 +205,7 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 
     for (i = 0; i < ncnt; i++) // n[i] 초기화
     {
+
         n[i]->bin = alp[i] + 64;
         n[i]->freq = cnt[i];
         n[i]->left = NULL;
@@ -377,11 +378,13 @@ void encoding(Node* n, char* binen, int length, int *alp, int ncnt)
         {
             for (int i = 0; i < 26;i++)
             {
-                
+                if (alp[i]+64 == n->bin)
+                    printf("alp[%d] = %c  \t n->bin = %c\n", i, alp[i]+64, n->bin);
                     n->bin = malloc(sizeof(char) * length);
                     binen[length] = '\0';
 
                     strcpy(n->bin, binen);
+
             }
         }
             
