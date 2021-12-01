@@ -24,10 +24,9 @@ void makecleantree(Node* node, Node* head, int height);
 void encoding(Node* n, char* binen, int length, int* alp, int ncnt);
 void recursiveInorderbin(Node* ptr);
 int read_num(Node* h, char* arr,int* alp, int arrlen, int ncnt);
-
-void recursivedecoding(Node* n, char* alp);
 void recursivereadnum(Node* n, char* arr,char arrcmp, int arrlen);
-char decoding();
+void decoding();
+void recursivedecoding(Node* n, char* alp);
 
 void main()
 {
@@ -43,7 +42,6 @@ void main()
 	input_eng(arr, cnt); // 문자열 인풋받고 빈도 계산
 
 	Node* head = NULL; // 헤드노드
-
 
 	int* alp = malloc(sizeof(char) * 26); // 알파벳으로 사용 할 배열
 
@@ -96,39 +94,40 @@ void main()
 	}
 
 	// 테스터
-	printf("\n");
-	for (int i = 0; i < 26; i++)
-	{
+	//printf("\n");
+	//for (int i = 0; i < 26; i++)
+	//{
 
 
-		if (cnt[i] != 0)
-			printf("alp[%d] : %c / cnt[%d] : %d / alp[%d] : %d\n", i, alp[i], i, cnt[i], i, alp[i]);
-	}
+	//	if (cnt[i] != 0)
+	//		printf("alp[%d] : %c / cnt[%d] : %d / alp[%d] : %d\n", i, alp[i], i, cnt[i], i, alp[i]);
+	//}
 
 
 	//printf("%d\n", ncnt);
 
+	printf("\nencoding");
 	make_huffman_tree(&head); // 허프만트리 헤드노드 생성
-
 	insert_node(head, cnt, alp, ncnt);
-	printf("\n out to main \n");
-
+	printf(".");
 	char* binen = malloc(sizeof(char) * 5);
 	encoding(head->left, binen, 0, alp, ncnt);
-	printf("encodingout\n");
-	printf("%d", strlen(alp));
-	printf("into print bin\n");
-	recursiveInorderbin(head->left);
-	printf("\n");
-	printf("printbin\n");
-	printf("in to read_num\n");
-	printf("\n");
+	//recursiveInorderbin(head->left);
+	printf(".");
 	int arrlen = strlen(arr);
 	read_num(head, arr, alp, strlen(arr),ncnt);
-	printf("Encoded result : ");
+	printf(".\n\n");
+	printf("Encoded result: ");
 	for (int i = arrlen; i < strlen(arr);i++)
 		printf("%c", arr[i]);
-	printf("\n");
+	printf("\ndecoding...\n\n");
+
+	
+	//recursivedecoding(head->left, alp);
+	//printf("asd");
+	printf("Decoded result: ");
+	for (int i = 0;i < arrlen; i++)
+		printf("%c", arr[i]);
 	return;
 
 }
@@ -145,7 +144,6 @@ void input_eng(char* arr, int* cnt)
 		sorting_alp(arr, cnt, i);
 	}
 }
-
 void sorting_alp(char* arr, int* cnt, int num)
 {
 	int trs_alp = -64;
@@ -167,7 +165,6 @@ void sorting_alp(char* arr, int* cnt, int num)
 	//}
 
 }
-
 void make_huffman_tree(Node** h)
 {
 	*h = (Node*)malloc(sizeof(Node));
@@ -177,7 +174,6 @@ void make_huffman_tree(Node** h)
 	(*h)->bin = '@';
 
 }
-
 void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 {
 	Node* n[26];
@@ -206,11 +202,11 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 	{
 
 		n[i]->bin = alp[i];
-		printf("n[%d]->bin = %c \t", i, n[i]->bin);
+		//printf("n[%d]->bin = %c \t", i, n[i]->bin);
 		n[i]->freq = cnt[i];
 		n[i]->left = NULL;
 		n[i]->right = NULL;
-		printf("n[%d]->freq = %d\n", i, n[i]->freq);
+		//printf("n[%d]->freq = %d\n", i, n[i]->freq);
 
 	}
 
@@ -253,7 +249,7 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 
 	int tcal;
 
-	printf("d\n");
+	//printf("d\n");
 	while (1)
 	{
 
@@ -269,12 +265,12 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 		break;
 	}
 
-	recursiveInorder(h->left); // 고정 길이 코드
-	printf("\n");
-	printf("into the clean tree\n");
+	//recursiveInorder(h->left); // 고정 길이 코드
+	//printf("\n");
+	//printf("into the clean tree\n");
 	makecleantree(h->left, h, (bincnt - 2) / 2);
-	printf("in to insert\n");
-	recursiveInorder(h->left);
+	//printf("in to insert\n");
+	//recursiveInorder(h->left);
 	return;
 }
 void recursiveInorder(Node* ptr)
@@ -285,7 +281,6 @@ void recursiveInorder(Node* ptr)
 		recursiveInorder(ptr->right); // 오른쪽 자식 노드 재귀로 탐색 
 	}
 }
-
 void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
 {
 	if (n->left || n->right) {
@@ -334,78 +329,6 @@ void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
 	}
 
 }
-
-
-int read_num(Node* h, char* arr, int* alp, int arrlen, int ncnt)
-{
-	for (int i = 0; i < arrlen; i++)
-	{
-		//printf("before arr[%d] = %c\n", i, arr[i]);
-	    for (int j = 0; j < ncnt; j++)
-	    {
-			if (arr[i] == alp[j])
-			{
-				//printf("alp[%d] = %c\n", j, alp[j]);
-				//printf("require acess\n");
-				//printf("arrlen = %d\n", strlen(arr));
-				recursivereadnum(h->left, arr, arr[i], arrlen);
-				arrlen = strlen(arr);
-				break;
-			}
-	    }
-
-	}
-
-	return 0;
-}
-
-void recursivereadnum(Node* n, char* arr, char arrcmp, int len)
-{
-	if (n)
-	{
-		if(n->left)
-			recursivereadnum(n->left, arr,arrcmp,len);
-		if (!(n->left) && !(n->right))
-		{
-
-			if (arrcmp == n->freq)
-			{
-				//arr = malloc(sizeof(char) * strlen(n->bin));
-				strcat(arr, n->bin);
-				//strcpy(arr[len], n->bin);
-				
-				//len += strlen(n->bin);
-			}
-		}
-
-		if(n->right)
-			recursivereadnum(n->right, arr,arrcmp,len);
-
-	}
-}
-int dcnt = 0;
-void recursivedecoding(Node* n, char* alp)
-{
-	//if (n)
-	//{
-	//	if (n->left)
-	//		recursivedecoding(n->left, alp);
-	//	if (!(n->left) && !(n->right))
-	//	{
-	//		char* temp = malloc(sizeof(char)*5);
-	//		temp = alp[dcnt];
-	//		alp[dcnt] = n->bin;
-	//		n->bin = temp;
-	//	}
-	//	if (n->right)
-	//		recursivedecoding(n->right, alp);
-	//}
-}
-char decoding()
-{
-	return 0;
-}
-//char bin= bin[5]
 int ecnt = 0;
 void encoding(Node* n, char* binen, int length, int* alp, int ncnt)
 {
@@ -444,5 +367,106 @@ void recursiveInorderbin(Node* ptr) //, char *alp, int ncnt)
 		if (!ptr->left && !ptr->right)
 			printf("[%c = %s]", ptr->freq, ptr->bin); // 탐색된 값 출력 
 		recursiveInorderbin(ptr->right);//, alp, ncnt); // 오른쪽 자식 노드 재귀로 탐색 
+	}
+}
+int read_num(Node* h, char* arr, int* alp, int arrlen, int ncnt)
+{
+	for (int i = 0; i < arrlen; i++)
+	{
+		//printf("before arr[%d] = %c\n", i, arr[i]);
+		for (int j = 0; j < ncnt; j++)
+		{
+			if (arr[i] == alp[j])
+			{
+				//printf("alp[%d] = %c\n", j, alp[j]);
+				//printf("require acess\n");
+				//printf("arrlen = %d\n", strlen(arr));
+				recursivereadnum(h->left, arr, arr[i], arrlen,i);
+				arrlen = strlen(arr);
+				break;
+			}
+		}
+
+	}
+
+	return 0;
+}
+void recursivereadnum(Node* n, char* arr, char arrcmp, int len, int i)
+{
+	if (n)
+	{
+		if (n->left)
+			recursivereadnum(n->left, arr, arrcmp, len,i);
+		if (!(n->left) && !(n->right))
+		{
+
+			if (arrcmp == n->freq)
+			{
+				//arr = malloc(sizeof(char) * strlen(n->bin));
+				strcat(arr, n->bin);
+				//strcpy(arr[len], n->bin);
+
+				//len += strlen(n->bin);
+			}
+		}
+
+		if (n->right)
+			recursivereadnum(n->right, arr, arrcmp, len,i);
+
+	}
+}
+void decoding(Node* n, char* arr, int arrlen, int* alp, int ncnt )
+{
+	char cnt = 0;
+	//for (int i = arrlen; i < strlen(arr);i++)
+	//{
+	//	if (arr[i] != NULL)
+	//	{
+	//		if (arr[i] == '0')
+	//		{
+	//			cnt++;
+	//			n = n->left;
+	//		}
+	//		if (!(n->left) && !(n->right))
+	//		{
+	//			str
+	//			arr[i-cnt]
+	//		}
+	//		if (arr[i] = '1')
+	//		{
+	//			cnt++;
+	//			n = n->right;
+	//		}
+	//	}
+	//}
+}
+int dcnt = 0;
+void recursivedecoding(Node* n, int* alp)
+{
+	if (n)
+	{
+		if (n->left)
+			recursivedecoding(n->left, alp);
+		if (!(n->left) && !(n->right))
+		{
+			printf("dcnt = %d", dcnt);
+			char temp = 0;// = malloc(sizeof(char) * 5);
+			temp = alp[dcnt];
+			printf("a");
+			alp[dcnt] = malloc(sizeof(char) * strlen(n->bin));
+			alp[dcnt] = 0;
+			printf("b");
+			strcpy(alp[dcnt], n->bin);
+			printf("c");
+			strcpy(n->bin, temp);
+
+			printf("d");
+			dcnt++;
+			//temp = alp[dcnt];
+			//alp[dcnt] = n->bin;
+			//n->bin = temp;
+		}
+		if (n->right)
+			recursivedecoding(n->right, alp);
 	}
 }
