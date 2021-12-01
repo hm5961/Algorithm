@@ -116,6 +116,8 @@ void main()
             printf("alp[%d] : %c / cnt[%d] : %d / alp[%d] : %d\n", i, alp[i], i, cnt[i], i, alp[i]);
     }
 
+
+
     //printf("%d\n", ncnt);
 
     make_huffman_tree(&head); // 허프만트리 헤드노드 생성
@@ -211,7 +213,6 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
         n[i]->freq = cnt[i];
         n[i]->left = NULL;
         n[i]->right = NULL;
-        n[i]->bin = NULL;
         printf("n[%d]->freq = %d\n", i, n[i]->freq);
 
     }
@@ -291,17 +292,13 @@ void recursiveInorder(Node* ptr)
 int roop = 0;
 void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
 {
-    if (height == 0)
-        printf("zerohigh = %d \t roop = %d \t freq = %d \t alpha = %d\n", height, roop, n->freq, n->bin);
     if (n->left || n->right) {
         if (height > 0)//(((n->alpha > 64) && (n->alpha < 91)) || ((n->alpha > 96) && (n->alpha < 123))))
         { // n의 높이가 정상범위이며 n->alpha값이 영 대/소문자 범위일 경우
             if (n->left)
             {
-                printf("go to left\n");
                 height--;
                 roop++;
-                printf("roop = %d\n", roop);
                 makecleantree(n->left, n, height); // 왼쪽 자식노드 재귀로 탐색  
             }
 
@@ -309,42 +306,33 @@ void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
 
             if (n->freq == n->left->freq)
             {
-                printf("b");
                 if (p->left == n)
                 {
-                    printf("-1\n");
                     p->left = n->left;
                     height++;
                 }
                 else if (p->right == n)
                 {
-                    printf("-2\n");
                     p->right = n->left;
                     height++;
                 }
             }
             else if (n->freq == n->right->freq)
             {
-                printf("c");
                 if (p->left == n)
                 {
-                    printf("-1\n");
                     p->left = n->right;
                     height++;
                 }
                 else if (p->right == n)
                 {
-                    printf("-2");
                     p->right = n->right;
                     height++;
                 }
             }
-            printf("up\n");
             if (n->right)
             {
-                printf("go to right\n");
                 height--;
-                printf("roop = %d\n", roop);
                 makecleantree(n->right, n, height); // 오른쪽 자식 노드 재귀로 탐색 
             }
         }
@@ -372,13 +360,14 @@ void encoding(Node* n, char* binen, int length, int* alp, int ncnt)
             binen[length] = '0';
             encoding(n->left, binen, length + 1, alp, ncnt);
         }
-        if ((!n->left) && (!n->right))
+        if ((n->left == NULL) && (n->right == NULL))
         {
-            printf("---------%c\n", n->bin);
-            for (int i = 0; i < 26;i++)
+            printf("n->freq = %d\t", n->freq);
+            printf("n->bin = % c\n", n->bin);
+            for (int i = 0; i <ncnt;i++)
             {
                 if (alp[i] == n->bin)
-                    printf("---------------alp[%d] = %c  \t n->bin = %c\n", i, alp[i] + 64, n->bin);
+                    printf("---------------alp[%d] = %c  == n->bin = %c\n", i, alp[i], n->bin);
                 n->bin = malloc(sizeof(char) * length);
                 binen[length] = '\0';
 
