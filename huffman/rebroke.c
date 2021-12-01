@@ -118,8 +118,13 @@ void main()
 	read_num(head, arr, alp, strlen(arr),ncnt);
 	printf(".\n\n");
 	printf("Encoded result: ");
-	for (int i = arrlen; i < strlen(arr);i++)
-		printf("%c", arr[i]);
+	//for (int i = 0; i < strlen(arr);i++)
+	//{
+	//	if (arr[i] == '0')
+	//		printf("%d", arr[i]);
+	//	printf("%c", arr[i]);
+	//}
+	printf("%s", arr);
 	printf("\ndecoding...\n\n");
 
 	
@@ -128,6 +133,7 @@ void main()
 	printf("Decoded result: ");
 	for (int i = 0;i < arrlen; i++)
 		printf("%c", arr[i]);
+
 	return;
 
 }
@@ -371,18 +377,27 @@ void recursiveInorderbin(Node* ptr) //, char *alp, int ncnt)
 }
 int read_num(Node* h, char* arr, int* alp, int arrlen, int ncnt)
 {
-	for (int i = 0; i < arrlen; i++)
+	int temp = arrlen;
+	int binsum = 0; // 누적 bin축적
+	for (int i = 0; i < strlen(arr); i)
 	{
-		//printf("before arr[%d] = %c\n", i, arr[i]);
+		//printf("\nin i\n");
+		
 		for (int j = 0; j < ncnt; j++)
 		{
-			if (arr[i] == alp[j])
+			//printf("\nin j\n");
+			if (arr[i] == alp[j]) // alp에 존재하는지 확인
 			{
-				//printf("alp[%d] = %c\n", j, alp[j]);
-				//printf("require acess\n");
-				//printf("arrlen = %d\n", strlen(arr));
-				recursivereadnum(h->left, arr, arr[i], arrlen,i);
-				arrlen = strlen(arr);
+				printf("same arr[%d] = %c , alp[%d] = %c \n",i,arr[i],j,alp[j]);
+				printf("arrlen = %d\n", strlen(arr));
+				recursivereadnum(h->left, arr, arr[i], strlen(arr), binsum);
+				printf("out from recur\n");
+				printf("arrlen = %d\n", strlen(arr));
+				binsum = strlen(arr) - arrlen;
+				//누적 binlen은 개별 binlen의 합 -1
+				//처음 binlen = 2, 다음 binlen = 2
+				//누적 binlen = 20
+
 				break;
 			}
 		}
@@ -400,21 +415,20 @@ void recursivereadnum(Node* n, char* arr, char arrcmp, int len, int i)
 		if (!(n->left) && !(n->right))
 		{
 
-			if (arrcmp == n->freq)
+			if (arrcmp == n->freq) // arr[i] == n->freq일떄
 			{
-				printf("%s", arr);
-				char* temp = malloc(sizeof(char) * len);
-				temp = '\0';
-				printf("strcat1\n");
-				strcat(temp, arr[i]);
-				printf("strcat2\n");
-				strcat(arr[i + strlen(n->bin)], temp);
-				//arr = malloc(sizeof(char) * strlen(n->bin));
-				printf("strcat3\n");
-				strcat(arr, n->bin);
-				//strcpy(arr[len], n->bin);
-				printf("%s", arr);
-				//len += strlen(n->bin);
+				int binlen = strlen(n->bin);
+				int arrlen = len + binlen - 1;
+				char* temp = malloc(sizeof(char) * arrlen);
+
+
+				strcpy(temp, n->bin);
+				strcat(temp, arr+i+1);
+
+				//*******************************************
+				strcpy(arr, temp);
+				printf("arr=%s\n", arr);
+				return;
 			}
 		}
 
