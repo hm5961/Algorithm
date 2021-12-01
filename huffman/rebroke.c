@@ -23,8 +23,8 @@ void recursiveInorder(Node* ptr);
 void makecleantree(Node* node, Node* head, int height);
 void encoding(Node* n, char* binen, int length, int* alp, int ncnt);
 void recursiveInorderbin(Node* ptr);
-int read_num(Node* h, char* arr,int* alp, int arrlen, int ncnt);
-void recursivereadnum(Node* n, char* arr,char arrcmp, int arrlen, int i);
+int read_num(Node* h, char* arr, int* alp, int arrlen, int ncnt);
+void recursivereadnum(Node* n, char* arr, char arrcmp, int arrlen, int i);
 void decoding();
 void recursivedecoding(Node* n, char* alp);
 
@@ -115,7 +115,7 @@ void main()
 	//recursiveInorderbin(head->left);
 	printf(".");
 	int arrlen = strlen(arr);
-	read_num(head, arr, alp, strlen(arr),ncnt);
+	read_num(head, arr, alp, strlen(arr), ncnt);
 	printf(".\n\n");
 	printf("Encoded result: ");
 	//for (int i = 0; i < strlen(arr);i++)
@@ -127,11 +127,11 @@ void main()
 	printf("%s", arr);
 	printf("\ndecoding...\n\n");
 
-	
+
 	//recursivedecoding(head->left, alp);
 	//printf("asd");
 	printf("Decoded result: ");
-	for (int i = 0;i < arrlen; i++)
+	for (int i = 0; i < arrlen; i++)
 		printf("%c", arr[i]);
 
 	return;
@@ -382,13 +382,13 @@ int read_num(Node* h, char* arr, int* alp, int arrlen, int ncnt)
 	for (int i = 0; i < strlen(arr); i)
 	{
 		//printf("\nin i\n");
-		
+
 		for (int j = 0; j < ncnt; j++)
 		{
 			//printf("\nin j\n");
 			if (arr[i] == alp[j]) // alp에 존재하는지 확인
 			{
-				printf("same arr[%d] = %c , alp[%d] = %c \n",i,arr[i],j,alp[j]);
+				printf("same arr[%d] = %c , alp[%d] = %c \n", i, arr[i], j, alp[j]);
 				printf("arrlen = %d\n", strlen(arr));
 				recursivereadnum(h->left, arr, arr[i], strlen(arr), binsum);
 				printf("out from recur\n");
@@ -411,7 +411,7 @@ void recursivereadnum(Node* n, char* arr, char arrcmp, int len, int i)
 	if (n)
 	{
 		if (n->left)
-			recursivereadnum(n->left, arr, arrcmp, len,i);
+			recursivereadnum(n->left, arr, arrcmp, len, i);
 		if (!(n->left) && !(n->right))
 		{
 
@@ -423,7 +423,7 @@ void recursivereadnum(Node* n, char* arr, char arrcmp, int len, int i)
 
 
 				strcpy(temp, n->bin);
-				strcat(temp, arr+i+1);
+				strcat(temp, arr + i + 1);
 
 				//*******************************************
 				strcpy(arr, temp);
@@ -433,11 +433,11 @@ void recursivereadnum(Node* n, char* arr, char arrcmp, int len, int i)
 		}
 
 		if (n->right)
-			recursivereadnum(n->right, arr, arrcmp, len,i);
+			recursivereadnum(n->right, arr, arrcmp, len, i);
 
 	}
 }
-void decoding(Node* n, char* arr, int arrlen, int* alp, int ncnt )
+void decoding(Node* n, char* arr, int arrlen, int* alp, int ncnt)
 {
 	char cnt = 0;
 	//for (int i = arrlen; i < strlen(arr);i++)
