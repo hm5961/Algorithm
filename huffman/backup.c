@@ -7,7 +7,7 @@
 #pragma warning(disable:6011)
 typedef struct node {
     int freq;
-    char *bin;
+    char* bin;
     struct node* left;
     struct node* right;
 } Node;
@@ -22,7 +22,7 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt);
 void recursiveInorder(Node* ptr);
 void makecleantree(Node* node, Node* head, int height);
 void InOrderPrintTree(Node* node);
-void encoding(Node *n, char* binen, int length, int *alp, int ncnt);
+void encoding(Node* n, char* binen, int length, int* alp, int ncnt);
 void recursiveInorderbin(Node* ptr);
 int read_num(Node* h); // 트리 좌우 타고 다니며 수에 해당하는 이진코드 나오게하는 함수
 
@@ -51,7 +51,7 @@ void main()
     {
         if (cnt[i] != 0)
         {
-            alp[i] = i + 1; // 초기값 지정
+            alp[i] = i + 65; // 초기값 지정
             ncnt++;
             //printf("%c : %d / %d\n", alp[i] + 64, cnt[i], alp[i]);
         }
@@ -113,7 +113,7 @@ void main()
            //}
 
         if (cnt[i] != 0)
-            printf("alp[%d] : %c / cnt[%d] : %d / alp[%d] : %d\n", i, alp[i] + 64, i, cnt[i], i, alp[i]);
+            printf("alp[%d] : %c / cnt[%d] : %d / alp[%d] : %d\n", i, alp[i], i, cnt[i], i, alp[i]);
     }
 
     //printf("%d\n", ncnt);
@@ -122,8 +122,8 @@ void main()
 
     insert_node(head, cnt, alp, ncnt);
     printf("\n out to main \n");
-    char *binen = malloc(sizeof(char) * 5);
-    encoding(head->left,binen,0,alp,ncnt);
+    char* binen = malloc(sizeof(char) * 5);
+    encoding(head->left, binen, 0, alp, ncnt);
     printf("encodingout\n");
 
     printf("into print bin\n");
@@ -205,8 +205,9 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 
     for (i = 0; i < ncnt; i++) // n[i] 초기화
     {
-
-        n[i]->bin = alp[i] + 64;
+        
+        n[i]->bin = alp[i];
+        printf("n[%d]->bin = %c \t", i, n[i]->bin);
         n[i]->freq = cnt[i];
         n[i]->left = NULL;
         n[i]->right = NULL;
@@ -214,10 +215,10 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
         printf("n[%d]->freq = %d\n", i, n[i]->freq);
 
     }
-    
+
     for (i = 0; i < bincnt - 1; i++) // m[i] 초기화
     {
-        m[i]->bin = 122-i; //bincnt - 2 - i;
+        m[i]->bin = 122 - i; //bincnt - 2 - i;
         m[i]->freq = 0;
         m[i]->left = NULL;
         m[i]->right = NULL;
@@ -242,7 +243,7 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
             i += 2;
             mcnt++;
         }
-        else if(n[i]->freq)//if(n[i]->freq)
+        else if (n[i]->freq)//if(n[i]->freq)
         {
             m[mcnt]->left = n[i];
             m[mcnt]->freq = n[i]->freq;
@@ -303,13 +304,11 @@ void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
                 printf("roop = %d\n", roop);
                 makecleantree(n->left, n, height); // 왼쪽 자식노드 재귀로 탐색  
             }
-            
+
             height++;
 
-            printf("nonzero = %d \t roop = %d \t freq = %d \t alpha = %d\n", height, roop, n->freq, n->bin);
             if (n->freq == n->left->freq)
             {
-                printf("calhigh = % d \t n->alpha = % d \t n->freq = % d\n", height, n->bin, n->freq);
                 printf("b");
                 if (p->left == n)
                 {
@@ -326,7 +325,6 @@ void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
             }
             else if (n->freq == n->right->freq)
             {
-                printf("cal height = %d \t n->alpha = %d \t n->freq = %d\n", height, n->bin, n->freq);
                 printf("c");
                 if (p->left == n)
                 {
@@ -365,42 +363,43 @@ char decoding()
     return 0;
 }
 //char bin= bin[5]
-void encoding(Node* n, char* binen, int length, int *alp, int ncnt)
+void encoding(Node* n, char* binen, int length, int* alp, int ncnt)
 {
     if (n)
     {
         if (n->left)
         {
             binen[length] = '0';
-            encoding(n->left, binen,length+1,alp,ncnt);
-        }       
+            encoding(n->left, binen, length + 1, alp, ncnt);
+        }
         if ((!n->left) && (!n->right))
         {
+            printf("---------%c\n", n->bin);
             for (int i = 0; i < 26;i++)
             {
-                if (alp[i]+64 == n->bin)
-                    printf("alp[%d] = %c  \t n->bin = %c\n", i, alp[i]+64, n->bin);
-                    n->bin = malloc(sizeof(char) * length);
-                    binen[length] = '\0';
+                if (alp[i] == n->bin)
+                    printf("---------------alp[%d] = %c  \t n->bin = %c\n", i, alp[i] + 64, n->bin);
+                n->bin = malloc(sizeof(char) * length);
+                binen[length] = '\0';
 
-                    strcpy(n->bin, binen);
+                strcpy(n->bin, binen);
 
             }
         }
-            
+
         if (n->right)
         {
             binen[length] = '1';
-            encoding(n->right, binen,length+1,alp,ncnt);
+            encoding(n->right, binen, length + 1, alp, ncnt);
         }
-        
+
     }
 }
 void recursiveInorderbin(Node* ptr)
 {
     if (ptr) { // ptr의 자식노드로 재귀된 값이 노드의 형태 일 때 
         recursiveInorderbin(ptr->left); // 왼쪽 자식노드 재귀로 탐색  
-        if(!ptr->left && !ptr->right)
+        if (!ptr->left && !ptr->right)
             printf("[%c = %s]", ptr->bin, ptr->bin); // 탐색된 값 출력 
         recursiveInorderbin(ptr->right); // 오른쪽 자식 노드 재귀로 탐색 
     }
