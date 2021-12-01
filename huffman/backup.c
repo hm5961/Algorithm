@@ -21,10 +21,9 @@ void make_huffman_tree(Node** h);
 void insert_node(Node* h, int* cnt, int* alp, int ncnt);
 void recursiveInorder(Node* ptr);
 void makecleantree(Node* node, Node* head, int height);
-void InOrderPrintTree(Node* node);
 void encoding(Node* n, char* binen, int length, int* alp, int ncnt);
 void recursiveInorderbin(Node* ptr);
-int read_num(Node* h); // 트리 좌우 타고 다니며 수에 해당하는 이진코드 나오게하는 함수
+int read_num(Node* h, char* arr); 
 
 char decoding();
 
@@ -289,7 +288,6 @@ void recursiveInorder(Node* ptr)
     }
 }
 
-int roop = 0;
 void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
 {
     if (n->left || n->right) {
@@ -298,7 +296,6 @@ void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
             if (n->left)
             {
                 height--;
-                roop++;
                 makecleantree(n->left, n, height); // 왼쪽 자식노드 재귀로 탐색  
             }
 
@@ -341,8 +338,9 @@ void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
 }
 
 
-int read_num(Node* h)
+int read_num(Node* h, char* arr)
 {
+    for(int i = 0; i<)
     return 0;
 }
 
@@ -367,12 +365,19 @@ void encoding(Node* n, char* binen, int length, int* alp, int ncnt)
             for (int i = 0; i <ncnt;i++)
             {
                 if (alp[i] == n->bin)
-                    printf("---------------alp[%d] = %c  == n->bin = %c\n", i, alp[i], n->bin);
-                n->bin = malloc(sizeof(char) * length);
-                binen[length] = '\0';
+                {
+                    printf("same \t");
+                    printf("alp[i] = %c\n", alp[i]);
 
-                strcpy(n->bin, binen);
+                    n->freq = alp[i];
 
+                    //alp[i] = malloc(sizeof(char) * length);
+                    n->bin = malloc(sizeof(char) * length);
+                    binen[length] = '\0';
+
+                    strcpy(n->bin, binen); 
+                    //strcpy(alp[i], binen);
+                }
             }
         }
 
@@ -384,12 +389,12 @@ void encoding(Node* n, char* binen, int length, int* alp, int ncnt)
 
     }
 }
-void recursiveInorderbin(Node* ptr)
+void recursiveInorderbin(Node* ptr) //, char *alp, int ncnt)
 {
     if (ptr) { // ptr의 자식노드로 재귀된 값이 노드의 형태 일 때 
-        recursiveInorderbin(ptr->left); // 왼쪽 자식노드 재귀로 탐색  
+        recursiveInorderbin(ptr->left); // alp, ncnt); // 왼쪽 자식노드 재귀로 탐색  
         if (!ptr->left && !ptr->right)
-            printf("[%c = %s]", ptr->bin, ptr->bin); // 탐색된 값 출력 
-        recursiveInorderbin(ptr->right); // 오른쪽 자식 노드 재귀로 탐색 
+            printf("[%c = %s]", ptr->freq, ptr->bin); // 탐색된 값 출력 
+        recursiveInorderbin(ptr->right);//, alp, ncnt); // 오른쪽 자식 노드 재귀로 탐색 
     }
 }
