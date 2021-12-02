@@ -4,7 +4,7 @@
 #pragma warning(disable:4996)
 #pragma warning(disable:6031) // scanf("%s" ,arr); 오류
 #pragma warning(disable:6001)
-//#pragma warning(disable:6011)
+#pragma warning(disable:6011)
 typedef struct node {
 	int freq;
 	char* bin;
@@ -31,10 +31,11 @@ void recursivedecoding(Node* n, int* alp);
 void main()
 {
 	char* arr = malloc(sizeof(char) * 10000); // 인풋받는 영어문자열
-	int* cnt = malloc(sizeof(int) * 26); // 알파벳 별 빈도 카운팅용
+	int* cnt = malloc(sizeof(int) * 52); // 알파벳 별 빈도 카운팅용
 
+	//cnt[0]를 arr[0]이 영대문자인지 소문자인지 연산
 
-	for (int i = 0; i < 26; i++)
+	for (int i = 0; i < 52; i++)
 	{
 		cnt[i] = 0; // cnt가 ++연산만 이뤄져서 초기화
 	}
@@ -43,23 +44,28 @@ void main()
 
 	Node* head = NULL; // 헤드노드
 
-	int* alp = malloc(sizeof(char) * 26); // 알파벳으로 사용 할 배열
+	int* alp = malloc(sizeof(char) * 52); // 알파벳으로 사용 할 배열
 
 	int ncnt = 0; // 빈도가 1 이상인 알파벳 수 카운트
-	for (int i = 0; i < 26; i++)
+	for (int i = 0; i < 52; i++)
 	{
-		if (cnt[i] != 0)
+		if (cnt[i] != 0 && i<26)
 		{
 			alp[i] = i + 65; // 빈도가 있는 알파벳만 활성화
+			ncnt++;
+		}
+		else if (cnt[i] != 0 && i>=26)
+		{
+			alp[i] = i + 71; // 빈도가 있는 알파벳만 활성화
 			ncnt++;
 		}
 	}
 
 	int temp;
 	// 빈도수 기준 내림차순 버블정렬
-	for (int i = 0; i < 26; i++)
+	for (int i = 0; i < 52; i++)
 	{
-		for (int j = 0; j < (26 - 1) - i; j++)
+		for (int j = 0; j < (52 - 1) - i; j++)
 		{
 			if (cnt[j] > cnt[j + 1])
 			{
@@ -75,7 +81,7 @@ void main()
 
 	}
 	// cnt[] = 0을 뒤로 밀기
-	for (int i = 0; i < 26; i++)
+	for (int i = 0; i < 52; i++)
 	{
 		for (int j = 0; j < i; j++)
 		{
@@ -91,16 +97,23 @@ void main()
 			}
 		}
 	}
+	for (int i = 0; i < ncnt; i++)
+	{
+		printf("cnt[%d] = %d", i, cnt[i]);
+		printf("alp[%d] = %c\n", i, alp[i]);
+	}
+
+
 	int icnt = 0;
 	printf("\nencoding");
 	make_huffman_tree(&head); // 허프만트리 헤드노드 생성
-	printf("%d\n", icnt);
-	icnt++;
 	insert_node(head, cnt, alp, ncnt);
-	printf("%d\n", icnt);
-	icnt++;
+	free(cnt);
 	printf(".");
-	char* binen = malloc(sizeof(char) * 5);
+	char* binen = malloc(sizeof(char) * 6);
+	printf("problem");
+	for (int i = 0; i < strlen(binen);i++)
+		binen[i] = NULL;
 	encoding(head->left, binen, 0, alp, ncnt);
 	printf("%d\n", icnt);
 	icnt++;
@@ -126,28 +139,43 @@ void input_eng(char* arr, int* cnt) // 사용자로부터 문자열을 입력받
 {
 	printf("Put the string to encode: ");
 	//scanf("%s", arr);
-	printf("bdbbeacdEeeaeedbdcd");
-	strcpy(arr, "bdbbeacdeeaeedbdcd");
-	for (int i = 0; i < _msize(arr); i++)
+	printf("bdBbeacdEeeAeeDBDcd\n");
+	strcpy(arr, "bdBbeacdEeeAeeDBDcd");
+
+	for (int i = 0; i < strlen(arr);i++) 
 	{
-		sorting_alp(arr, cnt, i);
+			sorting_alp(arr, cnt, i);
 	}
 }
 void sorting_alp(char* arr, int* cnt, int num)
 {
 	int trs_alp = -64;
-	int i;
 
 	trs_alp += arr[num];
-
-	for (i = 1; i <= 26; i++)
+	if (arr[num] >= 65 && arr[num] <= 90)
 	{
-		if (trs_alp == i || trs_alp + 32 == i) // alp가 영문자면 각 영문자에 해당되는 빈도수 ++
+		for (int i = 1; i <= 26; i++)
 		{
-			cnt[i - 1]++;
-			break;
+			if (arr[num] - 64 == i)
+			{
+				cnt[i - 1]++;
+				break;
+			}
 		}
 	}
+	else if (arr[num] >= 97 && arr[num] <= 122)
+	{
+		for (int i = 27; i <= 52; i++)
+		{
+			if (arr[num]-96 == i-26) // alp가 영문자면 각 영문자에 해당되는 빈도수 ++
+			{
+				cnt[i - 1]++;
+				break;
+			}
+		}
+	}
+
+
 
 }
 void make_huffman_tree(Node** h) //트리 헤드 생성
@@ -161,11 +189,11 @@ void make_huffman_tree(Node** h) //트리 헤드 생성
 }
 void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 {
-	Node* n[26];
-	Node* m[25];
+	Node* n[52];
+	Node* m[51];
 	int i;
 	int bincnt = ncnt;
-	for (i = 1; i < 9; i++)
+	for (i = 1; i < 52; i++)
 	{
 		if (bincnt & (bincnt - 1)) // 2제곱수 만들기
 			bincnt++;
@@ -184,29 +212,21 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 	}
 	for (i = 0; i < ncnt; i++) // n[i] 초기화
 	{
-		
-		printf("problem");
+
 		n[i]->bin = alp[i];
-		//printf("n[%d]->bin = %c \t", i, n[i]->bin);
 		n[i]->freq = cnt[i];
 		n[i]->left = NULL;
 		n[i]->right = NULL;
-		//printf("n[%d]->freq = %d\n", i, n[i]->freq);
 
 	}
 
 	for (i = 0; i < bincnt - 1; i++) // m[i] 초기화
 	{
-		m[i]->bin = 122 - i; //bincnt - 2 - i;
+		m[i]->bin = 0; //bincnt - 2 - i;
 		m[i]->freq = 0;
 		m[i]->left = NULL;
 		m[i]->right = NULL;
 	}
-	//for (i = 0; i <= 26; i++)
-	//{
-	//    free(alp[i]);
-	//    free(cnt[i]);
-	//}
 	int mcnt = 0; // 사용된 m카운트
 	i = 0;
 	for (int j = 0; j < ncnt; j++) // 동일값끼리 우선 묶음
@@ -214,7 +234,7 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 		if (i > ncnt - 1)
 			break;
 
-		if ((i+1)<ncnt && (n[i]->freq == n[i + 1]->freq)) // freq이 같은값 있으면 묶기
+		if ((i + 1) < ncnt && (n[i]->freq == n[i + 1]->freq)) // freq이 같은값 있으면 묶기
 		{
 			m[mcnt]->left = n[i];
 			m[mcnt]->right = n[i + 1];
@@ -250,60 +270,70 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 		break;
 	}
 
+	printf("before make tree\n");
+	recursiveInorder(h->left);
+	printf("\n");
 	makecleantree(h->left, h, (bincnt - 2) / 2);
+	printf("after make tree\n");
+	recursiveInorder(h->left);
+	printf("\n");
 	return;
 }
 void recursiveInorder(Node* ptr)
 {
 	if (ptr) { // ptr의 자식노드로 재귀된 값이 노드의 형태 일 때 
 		recursiveInorder(ptr->left); // 왼쪽 자식노드 재귀로 탐색  
-		printf(" [%d] ", ptr->freq); // 탐색된 값 출력 
+		if(!(ptr->left)&&!(ptr->right))
+			printf(" [%d] ", ptr->freq); // 탐색된 값 출력 
 		recursiveInorder(ptr->right); // 오른쪽 자식 노드 재귀로 탐색 
 	}
 }
 void makecleantree(Node* n, Node* p, int height) // 조건부 삭제
 {
-	if (n->left || n->right) {
-		if (height > 0)
-		{ 
-			if (n->left)
+	if (n)
+	{
+		if ( (n->left!=NULL) || (n->right!=NULL)) {
+			if (height > 0)
 			{
-				height--;
-				makecleantree(n->left, n, height); // 왼쪽 자식노드 재귀로 탐색  
-			}
+				if (n->left)
+				{
+					height--;
+					makecleantree(n->left, n, height); // 왼쪽 자식노드 재귀로 탐색  
+				}
 
-			height++;
+				height++;
 
-			if (n->freq == n->left->freq)
-			{
-				if (p->left == n)
+				if (n->freq == n->left->freq)
 				{
-					p->left = n->left;
-					height++;
+					if (p->left == n)
+					{
+						p->left = n->left;
+						height++;
+					}
+					else if (p->right == n)
+					{
+						p->right = n->left;
+						height++;
+					}
 				}
-				else if (p->right == n)
+				else if (n->freq == n->right->freq)
 				{
-					p->right = n->left;
-					height++;
+					if (p->left == n)
+					{
+						p->left = n->right;
+						height++;
+					}
+					else if (p->right == n)
+					{
+						p->right = n->right;
+						height++;
+					}
 				}
-			}
-			else if (n->freq == n->right->freq)
-			{
-				if (p->left == n)
+				if (n->right)
 				{
-					p->left = n->right;
-					height++;
+					height--;
+					makecleantree(n->right, n, height); // 오른쪽 자식 노드 재귀로 탐색 
 				}
-				else if (p->right == n)
-				{
-					p->right = n->right;
-					height++;
-				}
-			}
-			if (n->right)
-			{
-				height--;
-				makecleantree(n->right, n, height); // 오른쪽 자식 노드 재귀로 탐색 
 			}
 		}
 	}
@@ -327,7 +357,7 @@ void encoding(Node* n, char* binen, int length, int* alp, int ncnt)
 			binen[length] = '\0';
 
 			strcpy(n->bin, binen); // 문자열 복사
-			ecnt++; 
+			ecnt++;
 		}
 
 		if (n->right)
@@ -414,11 +444,11 @@ void decoding(Node* n, char* arr, int* alp, int ncnt)
 			{
 				if (alp[j] == p->freq)
 				{
-					printf("%c", alp[j]); // 변환없이 출력만
-					p = n;
+						printf("%c", alp[j]); // 변환없이 출력만
+						p = n;
 				}
 			}
 		}
-		
+
 	}
 }
