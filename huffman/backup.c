@@ -177,8 +177,6 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 	}
 	for (i = 0; i < ncnt; i++) // n[i] 초기화
 	{
-		
-		printf("problem");
 		n[i]->bin = alp[i];
 		//printf("n[%d]->bin = %c \t", i, n[i]->bin);
 		n[i]->freq = cnt[i];
