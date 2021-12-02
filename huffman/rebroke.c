@@ -5,9 +5,6 @@
 #pragma warning(disable:6031) // scanf("%s" ,arr); 오류
 #pragma warning(disable:6001)
 #pragma warning(disable:6011)
-#pragma warning(disable:6387)
-#pragma warning(disable:4047)
-#pragma warning(disable:4267)
 typedef struct node {
 	int freq;
 	char* bin;
@@ -27,7 +24,7 @@ void makecleantree(Node* node, Node* head, int height);
 void encoding(Node* n, char* binen, int length, int* alp, int ncnt);
 void recursiveInorderbin(Node* ptr);
 void read_num(Node* h, char* arr, int* alp, int arrlen, int ncnt);
-void recursivereadnum(Node* n, char* arr, char arrcmp);
+void recursivereadnum(Node* n, char* arr, char arrcmp, int binlen);
 void decoding(Node* n, char* arr, int* alp, int ncnt);
 void recursivedecoding(Node* n, int* alp);
 
@@ -113,7 +110,8 @@ void main()
 
 	encoding(head->left, binen, 0, alp, ncnt);
 	printf(".");
-	read_num(head, arr, alp, strlen(arr), ncnt);
+	int arrlen = strlen(arr);
+	read_num(head, arr, alp, arrlen, ncnt);
 	printf(".\n\n");
 	printf("Encoded result: ");
 	printf("%s", arr);
@@ -263,14 +261,7 @@ void insert_node(Node* h, int* cnt, int* alp, int ncnt)
 		break;
 	}
 
-	//printf("before make tree\n");
-	//recursiveInorder(h->left);
-	//printf("\n");
-	//makecleantree(h->left, h, (bincnt - 2) / 2);
-	//printf("after make tree\n");
-	//recursiveInorder(h->left);
-	//printf("\n");
-	//테스트 완료시 삭제
+	makecleantree(h->left, h, (bincnt - 2) / 2);
 	return;
 }
 void recursiveInorder(Node* ptr) // 테스트 완료시 삭제
@@ -379,7 +370,7 @@ void read_num(Node* h, char* arr, int* alp, int arrlen, int ncnt)
 		for (int j = 0; j < ncnt; j++)
 		{
 			if (arr[i] == alp[j]) // alp에 존재하는지 확인
-				recursivereadnum(h->left, arr, arr[i]);
+				recursivereadnum(h->left, arr, arr[i], strlen(arr));
 		}
 	}
 }
@@ -419,24 +410,30 @@ void recursivereadnum(Node* n, char* arr, char arrcmp)
 	}
 }
 
+int freqcnt = 0;
+
 void decoding(Node* n, char* arr, int* alp, int ncnt)
 {
-	Node* p = n;
+	Node* p = n;	
 	int tcnt = 0; // 토탈 카운트
 	int cnt = 0; // 현재 카운트
-
+	printf("\n");
 	for (int i = 0; i < strlen(arr); i++)
 	{
+
+
 		if (p->left && arr[i] == 48) //아스키 코드 기준 0
 		{
-			p = p->left;
 			cnt++;
+			printf("go to left i = %d / cnt = %d \n",i,cnt);
+			p = p->left;
 		}
 
 		else if (p->right && arr[i] == 49)// 아스키 코드 기준 1
 		{
-			p = p->right;
 			cnt++;
+			printf("go to right i = %d / cnt = %d \n", i, cnt);
+			p = p->right;
 		}
 
 		if (!(p->left) && !(p->right))
@@ -445,18 +442,26 @@ void decoding(Node* n, char* arr, int* alp, int ncnt)
 			{
 				if (alp[j] == p->freq)
 				{
-					printf("hi\n");
+					printf("calculate i = %d / cnt = %d \n", i, cnt);
+					printf("\n");
 					tcnt += cnt;
-					char* temp = malloc(sizeof(char) * (strlen(arr)-cnt+1));
-					printf("arrlen = %d \t templen = %d\n", strlen(arr), strlen(temp));
-					printf("how are you\n");
+
+					//printf("%s\n", arr + i);
+					//printf("%s\n", arr + tcnt);
+
+					int arrlen = strlen(arr) - cnt;
+					char* temp = malloc(sizeof(char) * arrlen);
+
 					temp[0] = p->freq;
-					printf("arr+tcnt = %s\n", arr+tcnt);
-					strcat(temp, arr + tcnt);
-					printf("%s", temp);
+					for (int k = 1; k < strlen(temp); k++)
+					{
+						temp[k] = arr[k + i];
+					}
+					printf("temp = %s\n", temp);
+
 
 					strcpy(arr + tcnt - cnt, temp);
-					printf("%s", temp);
+					printf("arr = %s\n", arr);
 
 					//printf("%c", alp[j]); // 변환없이 출력만
 					p = n;
@@ -464,6 +469,5 @@ void decoding(Node* n, char* arr, int* alp, int ncnt)
 				}
 			}
 		}
-
 	}
 }
